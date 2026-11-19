@@ -6,8 +6,8 @@
     <meta name="description" content="ਪਿੰਡ ਦੀਆਂ ਰਾਹਾਂ · Pind Diyan Raahan — an open-world Punjab countryside sandbox for desktop widescreen." />
     <meta name="theme-color" content="#2f5d24" />
     <title>ਪਿੰਡ ਦੀਆਂ ਰਾਹਾਂ · Pind Diyan Raahan</title>
-    <script type="module" crossorigin src="./assets/index-BQFU78GN.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-RpibW6P-.css">
+    <script type="module" crossorigin src="./assets/index-BNzfll-R.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-hNCUNFsH.css">
   </head>
   <body>
     <div id="game-root">
@@ -35,6 +35,20 @@
               <span class="stat-label">ਕਮਾਈ · Coins</span>
               <strong id="coin-count">0</strong>
             </div>
+            <div class="stat rep-pill" id="rep-pill" title="ਇੱਜ਼ਤ / ਦਬਕਾ · Izzat (Respect) / Dabka (Bold Notoriety)">
+              <span class="stat-label">ਇੱਜ਼ਤ / ਦਬਕਾ · Reputation</span>
+              <strong id="rep-title" lang="pa">ਨਵਾਂ ਮੁੰਡਾ · Newcomer</strong>
+            </div>
+          </div>
+          <!-- Identification strip: exactly what the pehredars can describe (hidden when clean) -->
+          <div id="id-tags" class="hud-panel id-tags" aria-live="polite" hidden>
+            <span class="id-head">ਪਛਾਣ · What Pehredars Can Identify</span>
+            <ul class="id-list">
+              <li id="id-vehicle" hidden>Vehicle ID'd: <strong></strong></li>
+              <li id="id-attire" hidden>Pagg ID'd: <strong></strong></li>
+              <li id="id-zone" hidden>Last Seen: <strong></strong></li>
+              <li id="id-pending" hidden>Witnesses are still taking notes…</li>
+            </ul>
           </div>
           <div id="mission-box" class="hud-panel mission-box" hidden>
             <div class="mission-head">
@@ -133,6 +147,17 @@
           </div>
         </section>
 
+        <!-- Story / cast dialogue card: bottom-centre, only while a conversation or chapter choice is open -->
+        <section id="story-card" class="hud-panel story-card" aria-live="polite" aria-labelledby="story-speaker" hidden>
+          <header class="story-head">
+            <strong id="story-speaker" class="story-speaker" lang="pa"></strong>
+            <button type="button" id="story-close" class="ghost-btn story-close">Close <kbd>Esc</kbd></button>
+          </header>
+          <p id="story-text-gu" class="story-text gu" lang="pa"></p>
+          <p id="story-text-en" class="story-text en" lang="en"></p>
+          <div id="story-choices" class="story-choices" role="group" aria-label="Choices"></div>
+        </section>
+
         <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
       </div>
 
@@ -162,6 +187,7 @@
 
           <div class="tabs" role="tablist" aria-label="Pause sections">
             <button type="button" role="tab" id="tab-map" class="tab" aria-selected="true" aria-controls="panel-map">Map &amp; Missions</button>
+            <button type="button" role="tab" id="tab-story" class="tab" aria-selected="false" aria-controls="panel-story" tabindex="-1">Story · Ops · Cast</button>
             <button type="button" role="tab" id="tab-controls" class="tab" aria-selected="false" aria-controls="panel-controls" tabindex="-1">Keyboard &amp; Mouse</button>
             <button type="button" role="tab" id="tab-settings" class="tab" aria-selected="false" aria-controls="panel-settings" tabindex="-1">Audio · Sky · Rain · Shadows</button>
           </div>
@@ -178,6 +204,41 @@
               <p class="hint">Drive into a glowing marigold beacon in the world, or start one here.</p>
               <div id="mission-list" class="mission-list"></div>
               <button type="button" id="abort-mission" class="ghost-btn" hidden>Abandon current mission</button>
+            </div>
+          </section>
+
+          <section id="panel-story" class="tab-panel" role="tabpanel" aria-labelledby="tab-story" hidden>
+            <div class="story-grid">
+              <div class="story-col">
+                <section class="story-block" aria-labelledby="story-h-chapter">
+                  <h3 id="story-h-chapter"><span lang="pa">ਕਹਾਣੀ</span> · Story Campaign</h3>
+                  <div id="story-chapter" class="story-chapter"></div>
+                  <div id="story-chapters" class="chapter-pips" role="list" aria-label="Chapters"></div>
+                  <div class="story-actions">
+                    <button type="button" id="story-action" class="brass-btn">Start Chapter</button>
+                    <button type="button" id="story-replay" class="ghost-btn" hidden>Replay Ending</button>
+                    <button type="button" id="story-restart" class="ghost-btn">Restart story</button>
+                  </div>
+                  <h4 class="sub-head">Ending tracker · <span lang="pa">ਅੰਤ ਦਾ ਰੁਖ਼</span></h4>
+                  <div id="ending-tracker" class="ending-tracker"></div>
+                </section>
+                <section class="story-block" aria-labelledby="story-h-board">
+                  <h3 id="story-h-board"><span lang="pa">ਛਾਪੇ ਦਾ ਬੋਰਡ</span> · Tactical Planning Board</h3>
+                  <div id="op-board" class="op-board"></div>
+                </section>
+              </div>
+              <div class="story-col">
+                <section class="story-block" aria-labelledby="story-h-cast">
+                  <h3 id="story-h-cast"><span lang="pa">ਸਾਥੀ</span> · Pind Cast</h3>
+                  <div id="cast-panel" class="cast-panel"></div>
+                </section>
+                <section class="story-block" aria-labelledby="story-h-rep">
+                  <h3 id="story-h-rep"><span lang="pa">ਪਿੰਡ ਇੱਜ਼ਤ</span> · Reputation &amp; Pagg Wardrobe</h3>
+                  <div id="rep-panel" class="rep-panel"></div>
+                  <div id="pagg-swatches" class="pagg-swatches" role="group" aria-label="Patiala Shahi pagg colour"></div>
+                  <p class="hint">Swapping your Pagg or ride makes the pehredars' description useless. The Wardrobe Trunk stands by Motor #1 <kbd>E</kbd>.</p>
+                </section>
+              </div>
             </div>
           </section>
 
@@ -207,6 +268,14 @@
                 <legend>Rain · <span lang="pa">ਮੀਂਹ</span></legend>
                 <div id="rain-choices" class="choice-row" role="group" aria-label="Rain level"></div>
                 <p class="hint">Press <kbd>V</kbd> in the game: Dry, Light Shower, Heavy Downpour.</p>
+              </fieldset>
+              <fieldset>
+                <legend>Graphics Quality · <span lang="pa">ਤਸਵੀਰ ਦਾ ਮਿਆਰ</span></legend>
+                <div id="gfx-choices" class="choice-row" role="group" aria-label="Graphics quality">
+                  <button type="button" data-q="high" aria-pressed="true">High Bloom+PBR</button>
+                  <button type="button" data-q="balanced" aria-pressed="false">Balanced</button>
+                </div>
+                <p class="hint">High adds bloom, 4× MSAA and 2048 shadows; Balanced keeps frame rate steady on modest GPUs.</p>
               </fieldset>
               <fieldset>
                 <legend>Shadows · <span lang="pa">ਪਰਛਾਵੇਂ</span></legend>
